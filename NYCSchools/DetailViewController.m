@@ -17,7 +17,19 @@
 - (void)configureView {
     // Update the user interface for the detail item.
     if (self.detailItem) {
-        self.detailDescriptionLabel.text = [self.detailItem description];
+        self.schoolNameLabel.text = [self.detailItem schoolName];
+        NSString *numberOfTakers = @"Number of takers: ";
+        NSString *takersLbl = [numberOfTakers stringByAppendingString:[self.detailItem numOfTestTakers]];
+        self.numOfTakersLabel.text = takersLbl;
+        NSString *readingScore = @"Reading score: ";
+               NSString *readingLbl = [readingScore stringByAppendingString:[self.detailItem readingScore]];
+               self.readingScoreLabel.text = readingLbl;
+        NSString *mathScore = @"Matg score: ";
+        NSString *mathLbl = [mathScore stringByAppendingString:[self.detailItem mathScore]];
+        self.mathScoreLabel.text = mathLbl;
+        NSString *writingScore = @"Writing score: ";
+        NSString *writingLbl = [writingScore stringByAppendingString:[self.detailItem writingScore]];
+        self.writingScoreLabel.text = writingLbl;
     }
 }
 
@@ -31,7 +43,7 @@
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailItem:(NSDate *)newDetailItem {
+- (void)setDetailItem:(School *)newDetailItem {
     if (_detailItem != newDetailItem) {
         _detailItem = newDetailItem;
         

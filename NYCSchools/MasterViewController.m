@@ -21,14 +21,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
     [self fetchSchools];
-
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-    
 }
 
 
@@ -53,8 +47,16 @@
         NSMutableArray<School *> *schools = NSMutableArray.new;
         for (NSDictionary *schoolDict in schoolsJSON) {
             NSString *name = schoolDict[@"school_name"];
+            NSString *numOfTestTakers = schoolDict[@"num_of_sat_test_takers"];
+            NSString *readingScore = schoolDict[@"sat_critical_reading_avg_score"];
+            NSString *mathScore = schoolDict[@"sat_math_avg_score"];
+            NSString *writingScore = schoolDict[@"sat_writing_avg_score"];
             School *school = School.new;
             school.schoolName = name;
+            school.numOfTestTakers = numOfTestTakers;
+            school.readingScore = readingScore;
+            school.mathScore = mathScore;
+            school.writingScore = writingScore;
             [schools addObject:school];
         }
         
@@ -66,24 +68,14 @@
     }] resume];
 }
 
-- (void)insertNewObject:(id)sender {
-    if (!self.objects) {
-        self.objects = [[NSMutableArray alloc] init];
-    }
-    [self.objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
-
 #pragma mark - Segues
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = self.objects[indexPath.row];
+        School *school = self.schools[indexPath.row];
         DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
-        controller.detailItem = object;
+        controller.detailItem = school;
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
         self.detailViewController = controller;
@@ -106,26 +98,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
 
-    School *object = self.schools[indexPath.row];
-    cell.textLabel.text = [object schoolName];
+    School *school = self.schools[indexPath.row];
+    cell.textLabel.text = [school schoolName];
     return cell;
 }
-
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.objects removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }
-}
-
 
 @end

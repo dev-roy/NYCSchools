@@ -11,5 +11,9 @@
 @interface School : NSObject
 
 @property (strong, nonatomic) NSString *schoolName;
+@property (strong, nonatomic) NSString *numOfTestTakers;
+@property (strong, nonatomic) NSString *readingScore;
+@property (strong, nonatomic) NSString *mathScore;
+@property (strong, nonatomic) NSString *writingScore;
 
 @end
